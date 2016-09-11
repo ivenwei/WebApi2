@@ -27,6 +27,7 @@ namespace WebAPI0911.Controllers
         }
 
         // GET: api/Products/5
+        //[ResponseType(typeof(Product))] 加入此行後文件會比較清楚
         [ResponseType(typeof(Product))]
         public IHttpActionResult GetProduct(int id)
         {
@@ -80,6 +81,7 @@ namespace WebAPI0911.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PatchProduct(int id, ProdoctsPatchViewModels product)
         {
+            //JObject 物件來接參數=> 傳入任何JSON 自己在解序列化處理
             //指部分更新要更新的資料
             if (!ModelState.IsValid)
             {
@@ -107,6 +109,7 @@ namespace WebAPI0911.Controllers
                 }
             }
 
+            //回傳更新後Product的資訊至前端
             //return Ok(item);
             return StatusCode(HttpStatusCode.NoContent);
         }
