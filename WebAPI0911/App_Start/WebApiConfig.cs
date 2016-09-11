@@ -22,6 +22,7 @@ namespace WebAPI0911
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
+                //不需要加ACTIONNAME  因為會使用HTTP動詞處理
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );

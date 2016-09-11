@@ -43,6 +43,7 @@ namespace WebAPI0911.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutProduct(int id, Product product)
         {
+            //傳入的product 自動會Model Binding
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -74,6 +75,42 @@ namespace WebAPI0911.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+
+        //實作Patch
+        [ResponseType(typeof(void))]
+        public IHttpActionResult PatchProduct(int id, ProdoctsPatchViewModels product)
+        {
+            //指部分更新要更新的資料
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var item = db.Product.Find(id);
+            item.Price = product.Price;
+            item.Stock = product.Stock;
+            //db.Entry(product).State = EntityState.Modified;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!ProductExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            //return Ok(item);
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
         // POST: api/Products
         [ResponseType(typeof(Product))]
         public IHttpActionResult PostProduct(Product product)
@@ -86,6 +123,7 @@ namespace WebAPI0911.Controllers
             db.Product.Add(product);
             db.SaveChanges();
 
+            //回傳甚麼樣的路由  回傳一個201的狀態碼
             return CreatedAtRoute("DefaultApi", new { id = product.ProductId }, product);
         }
 

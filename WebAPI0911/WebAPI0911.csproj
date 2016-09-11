@@ -243,6 +243,7 @@
     <Compile Include="Models\OrderLine.cs">
       <DependentUpon>FabricsModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProdoctsPatchViewModels.cs" />
     <Compile Include="Models\Product.cs">
       <DependentUpon>FabricsModel.tt</DependentUpon>
     </Compile>
