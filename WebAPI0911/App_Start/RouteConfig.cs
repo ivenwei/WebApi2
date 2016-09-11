@@ -11,6 +11,7 @@ namespace WebAPI0911
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
+            //* => Catch All  後面的方入pathInfo
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
