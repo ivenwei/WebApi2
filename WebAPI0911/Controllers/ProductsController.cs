@@ -13,6 +13,7 @@ using WebAPI0911.Models;
 namespace WebAPI0911.Controllers
 {
     [ValidateModel]
+    [HandleMyError]
     public class ProductsController : ApiController
     {
         private FabricsEntities db = new FabricsEntities();
@@ -80,6 +81,7 @@ namespace WebAPI0911.Controllers
 
         //實作Patch
         [ResponseType(typeof(void))]
+        //[HandleMyError]
         public IHttpActionResult PatchProduct(int id, ProdoctsPatchViewModels product)
         {
             //JObject 物件來接參數=> 傳入任何JSON 自己在解序列化處理

@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Web.Http;
 using Microsoft.Owin.Security.OAuth;
 using Newtonsoft.Json.Serialization;
+using WebAPI0911.Controllers;
 
 namespace WebAPI0911
 {
@@ -13,9 +14,17 @@ namespace WebAPI0911
         public static void Register(HttpConfiguration config)
         {
             // Web API 設定和服務
+
+            //轉換成Camel輸出
+            //GlobalConfiguration.Configuration.Formatters.JsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
+
             // 將 Web API 設定成僅使用 bearer 權杖驗證。
             config.SuppressDefaultHostAuthentication();
             config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
+
+            //設定讓整個專案的EXCEPTION都可以使用自訂的內容
+            config.Filters.Add(new HandleMyErrorAttribute());
 
             // Web API 路由
             config.MapHttpAttributeRoutes();
