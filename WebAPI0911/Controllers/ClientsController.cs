@@ -13,7 +13,7 @@ using WebAPI0911.Models;
 namespace WebAPI0911.Controllers
 {
     //Controller 不能需告ROUTE
-    [RoutePrefix("clients")]  //有宣告這個 下面的[Route("")內可將Client拿掉]
+    [RoutePrefix("clients")]  //有宣告這個 下面的[Route("")內可將Client拿掉  不能用斜線開頭]
     //有使用屬性路由則建議全部Controller內的API都採用屬性路由
     public class ClientsController : ApiController
     {
@@ -34,8 +34,9 @@ namespace WebAPI0911.Controllers
 
         // GET: api/Clients/5
         [ResponseType(typeof(Client))]
-        [Route("{id:int}")]
+        [Route("{id:int}",Name ="GetClientById")]
         //http://localhost:13838/clients/1/
+        //http://localhost:13838/1A => 404 比對不到API 就會交由IIS處理
         public IHttpActionResult GetClient(int id)
         {
             Client client = db.Client.Find(id);
@@ -44,6 +45,20 @@ namespace WebAPI0911.Controllers
                 return NotFound();
             }
             return Ok(client);
+        }
+
+
+        [Route("~/clients/type2/{id:int}")]
+        public Client GetClientType2(int id)
+        {
+            return db.Client.Find(id);
+        }
+
+
+        [Route("~/clients/type3/{id:int}")]
+        public IHttpActionResult GetClientType3(int id)
+        {
+            return Json(db.Client.Find(id));
         }
 
         // GET: api/Clients/5
@@ -86,7 +101,7 @@ namespace WebAPI0911.Controllers
         //http://localhost:13838/clients/1/orders/2001/05/26
         //注意1=>PostMan傳入的日期格式要等於 2001/05/26  若2001-05-26則判斷不出來
         //注意2=>{*date} == DateTime date 變數名稱需要一致  ModelBinding
-        //注意3=>網址使用簡單型別  VS 複雜型別ex:class(Body)
+        //注意3=>網址設定會使用簡單型別ex:int  VS 複雜型別ex:class(使用Body傳入)
         //注意4=>不會去定義狀態碼回傳甚麼 前後端訂定
         public IHttpActionResult GetClientOrdersByDate(int id,DateTime date)
         {
@@ -98,13 +113,9 @@ namespace WebAPI0911.Controllers
             return Ok(orders);
         }
 
-
-
-
-
         // PUT: api/Clients/5
         [ResponseType(typeof(void))]
-        [Route("")]
+        [Route("{id}")]
         public IHttpActionResult PutClient(int id, Client client)
         {
             if (!ModelState.IsValid)
@@ -140,7 +151,7 @@ namespace WebAPI0911.Controllers
 
         // POST: api/Clients
         [ResponseType(typeof(Client))]
-        [Route("")]
+        [Route("")] //client是複雜型別 所以從BODY取值 所以不須在ROUTE內設定
         public IHttpActionResult PostClient(Client client)
         {
             if (!ModelState.IsValid)
@@ -151,12 +162,19 @@ namespace WebAPI0911.Controllers
             db.Client.Add(client);
             db.SaveChanges();
 
-            return CreatedAtRoute("DefaultApi", new { id = client.ClientId }, client);
+            //用DefaultApi名稱產生 "api/{controller}/{id}" ( WEBCCONFIG) 並將ID帶入  傳統路由
+            //return CreatedAtRoute("DefaultApi", new { id = client.ClientId }, client);
+            //POST建立資料要包含LOCATION 告訴CLIENT端資料在哪裡
+            return CreatedAtRoute("GetClientById", new { id = client.ClientId }, client);
+
+            //下面寫法和return CreatedAtRoute("GetClientById", new { id = client.ClientId }, client)意義相同
+            //return Created(Url.Link("GetClientById", new { id = client.ClientId }), client);
+
         }
 
         // DELETE: api/Clients/5
         [ResponseType(typeof(Client))]
-        [Route("")]
+        [Route("{id}")]
         public IHttpActionResult DeleteClient(int id)
         {
             Client client = db.Client.Find(id);
