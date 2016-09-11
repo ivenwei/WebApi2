@@ -6,6 +6,7 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Web.Http;
 using System.Web.Http.Description;
 using WebAPI0911.Models;
@@ -49,6 +50,8 @@ namespace WebAPI0911.Controllers
 
 
         [Route("~/clients/type2/{id:int}")]
+        //http://localhost:13838/clients/type2/2501
+        //[Route("~/")]  ~開頭表示採用自己的設定  不會參考RoutePrefix
         public Client GetClientType2(int id)
         {
             return db.Client.Find(id);
@@ -56,10 +59,71 @@ namespace WebAPI0911.Controllers
 
 
         [Route("~/clients/type3/{id:int}")]
+        //http://localhost:13838/clients/type3/2501
         public IHttpActionResult GetClientType3(int id)
         {
             return Json(db.Client.Find(id));
         }
+
+        [Route("~/clients/type4/{id:int}")]
+        //http://localhost:13838/clients/type3/2501
+        public HttpResponseMessage GetClientType4(int id)
+        {
+            //return Json(db.Client.Find(id));
+            //return Request.CreateResponse();
+            //return Request.CreateResponse(HttpStatusCode.Accepted);  //可用在簽核 批次作業 非同步作業 泛指SERVER端接受要求
+
+            return Request.CreateResponse(HttpStatusCode.OK,db.Client.Find(id));
+
+        }
+
+        [Route("~/clients/type5/{id:int}")]
+        public HttpResponseMessage GetClientType5(int id)
+        {
+           var data = db.Client.Find(id);
+            return new HttpResponseMessage(HttpStatusCode.OK){
+                Content = new ObjectContent<Client>(data,GlobalConfiguration.Configuration.Formatters.JsonFormatter)
+            };
+
+        }
+
+
+        [Route("~/clients/type6/{id:int}")]
+        public HttpResponseMessage GetClientType6(int id)
+        {
+            var data = db.Client.Find(id);
+            return new HttpResponseMessage(HttpStatusCode.OK)
+            {
+                ReasonPhrase = "Hollow World",
+                Content = new ObjectContent<Client>(data, GlobalConfiguration.Configuration.Formatters.JsonFormatter)
+            };
+        }
+
+
+        [Route("~/clients/type7/{id:int}")]
+        public HttpResponseMessage GetClientType7(int id)
+        {
+            var data = db.Client.Find(id);
+            var res = new HttpResponseMessage(HttpStatusCode.OK)
+            {
+               ReasonPhrase = "Hollow World",
+               Content = new ObjectContent<Client>(data,GlobalConfiguration.Configuration.Formatters.JsonFormatter)
+            };
+
+            res.Headers.Add("X-JobID", "1");
+            return res;
+        }
+
+        [Route("~/clients/type8/{id:int}")]
+        public HttpResponseMessage GetClientType8(int id)
+        {
+            return new HttpResponseMessage()
+            {
+                StatusCode = HttpStatusCode.NotFound,
+                Content = new StringContent("AAA", Encoding.GetEncoding("Big5"))
+            };
+        }
+    
 
         // GET: api/Clients/5
         [ResponseType(typeof(Client))]
