@@ -12,6 +12,7 @@ using WebAPI0911.Models;
 
 namespace WebAPI0911.Controllers
 {
+    [ValidateModel]
     public class ProductsController : ApiController
     {
         private FabricsEntities db = new FabricsEntities();
@@ -45,10 +46,10 @@ namespace WebAPI0911.Controllers
         public IHttpActionResult PutProduct(int id, Product product)
         {
             //傳入的product 自動會Model Binding
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
             if (id != product.ProductId)
             {
@@ -118,10 +119,10 @@ namespace WebAPI0911.Controllers
         [ResponseType(typeof(Product))]
         public IHttpActionResult PostProduct(Product product)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
             db.Product.Add(product);
             db.SaveChanges();
