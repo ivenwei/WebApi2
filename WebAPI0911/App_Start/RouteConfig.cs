@@ -13,7 +13,8 @@ namespace WebAPI0911
         {
             //* => Catch All  後面的方入pathInfo
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
+            //
+            routes.MapMvcAttributeRoutes();
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

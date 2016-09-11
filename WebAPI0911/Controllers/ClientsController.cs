@@ -12,6 +12,9 @@ using WebAPI0911.Models;
 
 namespace WebAPI0911.Controllers
 {
+    //Controller 不能需告ROUTE
+    [RoutePrefix("clients")]  //有宣告這個 下面的[Route("")內可將Client拿掉]
+    //有使用屬性路由則建議全部Controller內的API都採用屬性路由
     public class ClientsController : ApiController
     {
         private FabricsEntities db = new FabricsEntities();
@@ -22,7 +25,7 @@ namespace WebAPI0911.Controllers
         }
 
         // GET: api/Clients
-        [Route("clients")]
+        [Route("")]
         //http://localhost:13838/clients/
         public IQueryable<Client> GetClient()
         {
@@ -31,7 +34,7 @@ namespace WebAPI0911.Controllers
 
         // GET: api/Clients/5
         [ResponseType(typeof(Client))]
-        [Route("clients/{id}")]
+        [Route("{id:int}")]
         //http://localhost:13838/clients/1/
         public IHttpActionResult GetClient(int id)
         {
@@ -45,7 +48,7 @@ namespace WebAPI0911.Controllers
 
         // GET: api/Clients/5
         [ResponseType(typeof(Client))]
-        [Route("clients/{id}/orders")]
+        [Route("{id}/orders")]
         //http://localhost:13838/clients/1/orders
         public IHttpActionResult GetClientOrders(int id)
         {
@@ -54,7 +57,7 @@ namespace WebAPI0911.Controllers
         }
 
         [ResponseType(typeof(Client))]
-        [Route("clients/{id}/orders/{orderID}")]
+        [Route("{id}/orders/{orderID}")]
         //http://localhost:13838/clients/1/orders/182
         public IHttpActionResult GetClientOrder(int id, int orderId)
         {
@@ -70,7 +73,7 @@ namespace WebAPI0911.Controllers
 
         // GET: api/Clients/5
         [ResponseType(typeof(Client))]
-        [Route("clients/{id}/orders/pending")]
+        [Route("{id}/orders/pending")]
         //http://localhost:13838/clients/1/orders/182
         public IHttpActionResult GetClientPending(int id)
         {
@@ -79,7 +82,7 @@ namespace WebAPI0911.Controllers
         }
 
         [ResponseType(typeof(Client))]
-        [Route("clients/{id}/orders/{*date}")]
+        [Route("{id}/orders/{*date}")]
         //http://localhost:13838/clients/1/orders/2001/05/26
         //注意1=>PostMan傳入的日期格式要等於 2001/05/26  若2001-05-26則判斷不出來
         //注意2=>{*date} == DateTime date 變數名稱需要一致  ModelBinding
@@ -101,6 +104,7 @@ namespace WebAPI0911.Controllers
 
         // PUT: api/Clients/5
         [ResponseType(typeof(void))]
+        [Route("")]
         public IHttpActionResult PutClient(int id, Client client)
         {
             if (!ModelState.IsValid)
@@ -136,6 +140,7 @@ namespace WebAPI0911.Controllers
 
         // POST: api/Clients
         [ResponseType(typeof(Client))]
+        [Route("")]
         public IHttpActionResult PostClient(Client client)
         {
             if (!ModelState.IsValid)
@@ -151,6 +156,7 @@ namespace WebAPI0911.Controllers
 
         // DELETE: api/Clients/5
         [ResponseType(typeof(Client))]
+        [Route("")]
         public IHttpActionResult DeleteClient(int id)
         {
             Client client = db.Client.Find(id);
